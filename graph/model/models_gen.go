@@ -10,9 +10,22 @@ type Company struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
+type Job struct {
+	ID     string `json:"id"`
+	Cid    string `json:"cid"`
+	Role   string `json:"role"`
+	Salary string `json:"salary"`
+}
+
 type NewCompnay struct {
 	Name     string `json:"name"`
 	Location string `json:"location"`
+}
+
+type NewJob struct {
+	Cid    string `json:"cid"`
+	Role   string `json:"role"`
+	Salary string `json:"salary"`
 }
 
 type NewUser struct {

@@ -20,7 +20,42 @@ func (r *mutationResolver) CreateCompany(ctx context.Context, input model.NewCom
 	return r.Service.CreateCompany(input)
 }
 
+// CreateJob is the resolver for the CreateJob field.
+func (r *mutationResolver) CreateJob(ctx context.Context, input model.NewJob) (*model.Job, error) {
+	return r.Service.CreateJob(input)
+}
+
+// ViewAllCompany is the resolver for the ViewAllCompany field.
+func (r *queryResolver) ViewAllCompany(ctx context.Context) ([]*model.Company, error) {
+	return r.Service.ViewAllCompanies()
+}
+
+// ViewCompanyByID is the resolver for the ViewCompanyById field.
+func (r *queryResolver) ViewCompanyByID(ctx context.Context, cid string) (*model.Company, error) {
+	return r.Service.ViewCompanyById(cid)
+}
+
+// ViewJobByID is the resolver for the ViewJobById field.
+func (r *queryResolver) ViewJobByID(ctx context.Context, id string) (*model.Job, error) {
+	return r.Service.ViewJobByID(id)
+}
+
+// ViewJobByCid is the resolver for the ViewJobByCid field.
+func (r *queryResolver) ViewJobByCid(ctx context.Context, cid string) ([]*model.Job, error) {
+	return r.Service.ViewJobByCid(cid)
+
+}
+
+// ViewAllJob is the resolver for the viewAllJob field.
+func (r *queryResolver) ViewAllJob(ctx context.Context) ([]*model.Job, error) {
+	return r.Service.ViewAllJob()
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
+// Query returns QueryResolver implementation.
+func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+
 type mutationResolver struct{ *Resolver }
+type queryResolver struct{ *Resolver }

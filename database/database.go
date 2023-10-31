@@ -16,7 +16,7 @@ func Open() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.Migrator().AutoMigrate(&models.Company{})
+	err = db.Migrator().AutoMigrate(&models.Company{}, &models.Job{})
 	if err != nil {
 		return nil, err
 	}

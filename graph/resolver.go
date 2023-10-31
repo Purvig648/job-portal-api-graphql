@@ -8,6 +8,6 @@ import "github.com/Purvig648/graphql-demo/service"
 
 //go:generate go run github.com/99designs/gqlgen
 
-type Resolver struct{
+type Resolver struct {
 	Service service.UserService
 }

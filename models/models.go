@@ -13,3 +13,9 @@ type Company struct {
 	Name     string `json:"companyname" validate:"required"`
 	Location string `json:"companylocation" validate:"required"`
 }
+type Job struct {
+	gorm.Model
+	Cid    string `json:"cid"`
+	Role   string `json:"role"`
+	Salary string `json:"salary"`
+}

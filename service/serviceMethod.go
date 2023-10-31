@@ -8,6 +8,112 @@ import (
 	"github.com/Purvig648/graphql-demo/pkg"
 )
 
+func (s *Service) ViewJobByCid(cid string) ([]*model.Job, error) {
+	jobDetails, err := s.userRepo.ViewJobByCid(cid)
+	if err != nil {
+		return nil, err
+	}
+	var jobDatas []*model.Job
+	for _, v := range jobDetails {
+		jobData := &model.Job{
+			ID:     strconv.FormatUint(uint64(v.ID), 10),
+			Cid:    v.Cid,
+			Role:   v.Role,
+			Salary: v.Salary,
+		}
+		jobDatas = append(jobDatas, jobData)
+	}
+	return jobDatas, nil
+
+}
+
+func (s *Service) ViewAllJob() ([]*model.Job, error) {
+	jobDetails, err := s.userRepo.ViewAllJob()
+	if err != nil {
+		return nil, err
+	}
+	var jobDatas []*model.Job
+
+	for _, v := range jobDetails {
+		jobData := &model.Job{
+			ID:     strconv.FormatUint(uint64(v.ID), 10),
+			Cid:    v.Cid,
+			Role:   v.Role,
+			Salary: v.Salary,
+		}
+		jobDatas = append(jobDatas, jobData)
+	}
+	return jobDatas, nil
+
+}
+
+func (s *Service) ViewJobByID(id string) (*model.Job, error) {
+	jobData, err := s.userRepo.ViewJobById(id)
+	if err != nil {
+		return &model.Job{}, err
+	}
+	return &model.Job{
+		ID:     strconv.FormatUint(uint64(jobData.ID), 10),
+		Cid:    jobData.Cid,
+		Role:   jobData.Role,
+		Salary: jobData.Salary,
+	}, nil
+
+}
+
+func (s *Service) CreateJob(JobDetails model.NewJob) (*model.Job, error) {
+	jd := models.Job{
+		Cid:    JobDetails.Cid,
+		Role:   JobDetails.Role,
+		Salary: JobDetails.Salary,
+	}
+	cd, err := s.userRepo.CreateJob(jd)
+	if err != nil {
+		return nil, err
+	}
+	id := strconv.FormatUint(uint64(cd.ID), 10)
+	return &model.Job{
+		ID:     id,
+		Cid:    jd.Cid,
+		Role:   jd.Role,
+		Salary: jd.Salary,
+	}, nil
+
+}
+
+func (s *Service) ViewCompanyById(cid string) (*model.Company, error) {
+	companyData, err := s.userRepo.ViewCompanyByID(cid)
+	if err != nil {
+		return &model.Company{}, err
+	}
+	return &model.Company{
+		ID:        strconv.FormatUint(uint64(companyData.ID), 10),
+		Name:      companyData.Name,
+		Location:  companyData.Location,
+		CreatedAt: companyData.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt: companyData.UpdatedAt.Format("2006-01-02 15:04:05"),
+	}, nil
+}
+
+func (s *Service) ViewAllCompanies() ([]*model.Company, error) {
+	companyDetails, err := s.userRepo.ViewAllCompany()
+	if err != nil {
+		return nil, err
+	}
+	var companyDatas []*model.Company
+
+	for _, v := range companyDetails {
+		companyData := &model.Company{
+			ID:       strconv.FormatUint(uint64(v.ID), 10),
+			Name:     v.Name,
+			Location: v.Location,
+		}
+		companyDatas = append(companyDatas, companyData)
+	}
+	return companyDatas, nil
+
+}
+
 func (s *Service) CreateCompany(companyDetails model.NewCompnay) (*model.Company, error) {
 	cd := models.Company{
 		Name:     companyDetails.Name,
