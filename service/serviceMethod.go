@@ -17,7 +17,7 @@ func (s *Service) ViewJobByCid(cid string) ([]*model.Job, error) {
 	for _, v := range jobDetails {
 		jobData := &model.Job{
 			ID:     strconv.FormatUint(uint64(v.ID), 10),
-			Cid:    v.Cid,
+			Cid:    strconv.FormatUint(uint64(v.Cid), 10),
 			Role:   v.Role,
 			Salary: v.Salary,
 		}
@@ -37,7 +37,7 @@ func (s *Service) ViewAllJob() ([]*model.Job, error) {
 	for _, v := range jobDetails {
 		jobData := &model.Job{
 			ID:     strconv.FormatUint(uint64(v.ID), 10),
-			Cid:    v.Cid,
+			Cid:    strconv.FormatUint(uint64(v.Cid), 10),
 			Role:   v.Role,
 			Salary: v.Salary,
 		}
@@ -54,7 +54,7 @@ func (s *Service) ViewJobByID(id string) (*model.Job, error) {
 	}
 	return &model.Job{
 		ID:     strconv.FormatUint(uint64(jobData.ID), 10),
-		Cid:    jobData.Cid,
+		Cid:    strconv.FormatUint(uint64(jobData.Cid), 10),
 		Role:   jobData.Role,
 		Salary: jobData.Salary,
 	}, nil
@@ -62,8 +62,12 @@ func (s *Service) ViewJobByID(id string) (*model.Job, error) {
 }
 
 func (s *Service) CreateJob(JobDetails model.NewJob) (*model.Job, error) {
+	uid, err := strconv.ParseUint(JobDetails.Cid, 10, 32)
+	if err != nil {
+		return nil, err
+	}
 	jd := models.Job{
-		Cid:    JobDetails.Cid,
+		Cid:    uint(uid),
 		Role:   JobDetails.Role,
 		Salary: JobDetails.Salary,
 	}
@@ -74,7 +78,7 @@ func (s *Service) CreateJob(JobDetails model.NewJob) (*model.Job, error) {
 	id := strconv.FormatUint(uint64(cd.ID), 10)
 	return &model.Job{
 		ID:     id,
-		Cid:    jd.Cid,
+		Cid:    strconv.FormatUint(uint64(cd.Cid), 10),
 		Role:   jd.Role,
 		Salary: jd.Salary,
 	}, nil
