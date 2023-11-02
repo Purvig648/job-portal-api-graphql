@@ -3,12 +3,14 @@ package service
 import (
 	"errors"
 
+	"github.com/Purvig648/graphql-demo/authentication"
 	"github.com/Purvig648/graphql-demo/graph/model"
 	"github.com/Purvig648/graphql-demo/repository"
 )
 
 type UserService interface {
 	UserSignup(userData model.NewUser) (*model.User, error)
+	LoginUser(userData model.LoginUser) (*model.Login, error)
 	CreateCompany(companyDetails model.NewCompnay) (*model.Company, error)
 	ViewAllCompanies() ([]*model.Company, error)
 	ViewCompanyById(cid string) (*model.Company, error)
@@ -19,14 +21,16 @@ type UserService interface {
 }
 type Service struct {
 	userRepo repository.UserRepo
+	a        *authentication.Auth
 }
 
-func NewService(userRepo repository.UserRepo) (UserService, error) {
+func NewService(a *authentication.Auth, userRepo repository.UserRepo) (UserService, error) {
 	if userRepo == nil {
 		return nil, errors.New("interface cannot be nil")
 	}
 	return &Service{
 		userRepo: userRepo,
+		a:        a,
 	}, nil
 
 }

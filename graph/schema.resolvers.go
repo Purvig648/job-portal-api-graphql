@@ -15,6 +15,11 @@ func (r *mutationResolver) UserSignup(ctx context.Context, input model.NewUser) 
 	return r.Service.UserSignup(input)
 }
 
+// Login is the resolver for the Login field.
+func (r *mutationResolver) Login(ctx context.Context, input model.LoginUser) (*model.Login, error) {
+	return r.Service.LoginUser(input)
+}
+
 // CreateCompany is the resolver for the CreateCompany field.
 func (r *mutationResolver) CreateCompany(ctx context.Context, input model.NewCompnay) (*model.Company, error) {
 	return r.Service.CreateCompany(input)
@@ -43,7 +48,6 @@ func (r *queryResolver) ViewJobByID(ctx context.Context, id string) (*model.Job,
 // ViewJobByCid is the resolver for the ViewJobByCid field.
 func (r *queryResolver) ViewJobByCid(ctx context.Context, cid string) ([]*model.Job, error) {
 	return r.Service.ViewJobByCid(cid)
-
 }
 
 // ViewAllJob is the resolver for the viewAllJob field.

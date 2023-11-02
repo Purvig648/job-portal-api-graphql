@@ -7,6 +7,16 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+func (r *Repo) CheckEmail(email string) (models.User, error) {
+	var userDetails models.User
+	result := r.DB.Where("email = ?", email).First(&userDetails)
+	if result.Error != nil {
+		log.Info().Err(result.Error).Send()
+		return models.User{}, errors.New("email not found")
+	}
+	return userDetails, nil
+}
+
 func (r *Repo) ViewJobByCid(cid string) ([]models.Job, error) {
 	var jobDetails []models.Job
 	result := r.DB.Find(&jobDetails)

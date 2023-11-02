@@ -2,6 +2,11 @@ package models
 
 import "gorm.io/gorm"
 
+type NewUser struct {
+	Email    string `json:"email" validate:"required" gorm:"unique"`
+	Password string `json:"password" validate:"required"`
+}
+
 type User struct {
 	gorm.Model
 	Name         string `json:"username" validate:"required"`

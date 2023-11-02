@@ -12,6 +12,7 @@ type Repo struct {
 }
 type UserRepo interface {
 	CreateUser(userDetails models.User) (models.User, error)
+	CheckEmail(email string) (models.User, error)
 	CreateCompany(companyDetails models.Company) (models.Company, error)
 	ViewAllCompany() ([]models.Company, error)
 	ViewCompanyByID(cid string) (models.Company, error)

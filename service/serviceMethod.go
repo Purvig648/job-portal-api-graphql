@@ -1,12 +1,48 @@
 package service
 
 import (
+	"errors"
 	"strconv"
+	"time"
 
 	"github.com/Purvig648/graphql-demo/graph/model"
 	"github.com/Purvig648/graphql-demo/models"
 	"github.com/Purvig648/graphql-demo/pkg"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/rs/zerolog/log"
 )
+
+func (s *Service) LoginUser(userData model.LoginUser) (*model.Login, error) {
+	userDetails, err := s.userRepo.CheckEmail(userData.Email)
+	if err != nil {
+		return nil, errors.New("email not found")
+	}
+
+	err = pkg.CheckHashedPassword(userData.Password, userDetails.HashPassword)
+	if err != nil {
+		log.Info().Err(err).Send()
+		return nil, errors.New("entered password is not wrong")
+	}
+
+	claims := jwt.RegisteredClaims{
+		Issuer:    "job portal project",
+		Subject:   strconv.FormatUint(uint64(userDetails.ID), 10),
+		Audience:  jwt.ClaimStrings{"users"},
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+	}
+
+	token, err := s.a.GenerateToken(claims)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Login{
+		Name:  userDetails.Name,
+		Email: userData.Email,
+		Token: token,
+	}, nil
+}
 
 func (s *Service) ViewJobByCid(cid string) ([]*model.Job, error) {
 	jobDetails, err := s.userRepo.ViewJobByCid(cid)

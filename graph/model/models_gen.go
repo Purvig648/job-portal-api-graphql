@@ -17,6 +17,17 @@ type Job struct {
 	Salary string `json:"salary"`
 }
 
+type Login struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Token string `json:"Token"`
+}
+
+type LoginUser struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type NewCompnay struct {
 	Name     string `json:"name"`
 	Location string `json:"location"`

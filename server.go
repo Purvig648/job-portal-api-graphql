@@ -9,10 +9,12 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/Purvig648/graphql-demo/authentication"
 	"github.com/Purvig648/graphql-demo/database"
 	"github.com/Purvig648/graphql-demo/graph"
 	"github.com/Purvig648/graphql-demo/repository"
 	"github.com/Purvig648/graphql-demo/service"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/rs/zerolog/log"
 )
 
@@ -41,6 +43,27 @@ func main() {
 }
 
 func StartApp() (service.UserService, error) {
+	log.Info().Msg("Main: Started: Intilaizing authentication support")
+	privatePEM, err := os.ReadFile("private.pem")
+	if err != nil {
+		return &service.Service{}, fmt.Errorf("reading the auth private key %w", err)
+	}
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privatePEM)
+	if err != nil {
+		return &service.Service{}, fmt.Errorf("parsing private key %w", err)
+	}
+	publicPEM, err := os.ReadFile("pubkey.pem")
+	if err != nil {
+		return &service.Service{}, fmt.Errorf("reading the auth public key %w", err)
+	}
+	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(publicPEM)
+	if err != nil {
+		return &service.Service{}, fmt.Errorf("parsing public key %w", err)
+	}
+	a, err := authentication.NewAuth(privateKey, publicKey)
+	if err != nil {
+		return &service.Service{}, fmt.Errorf("constructing auth %w", err)
+	}
 	db, err := database.Open()
 	if err != nil {
 		return &service.Service{}, fmt.Errorf("connecting to database %w", err)
@@ -60,7 +83,7 @@ func StartApp() (service.UserService, error) {
 	if err != nil {
 		return &service.Service{}, fmt.Errorf("could not initialize repo layer: %w ", err)
 	}
-	svc, err := service.NewService(repo)
+	svc, err := service.NewService(a, repo)
 	if err != nil {
 		return &service.Service{}, fmt.Errorf("could not initialize service layer: %w ", err)
 	}
